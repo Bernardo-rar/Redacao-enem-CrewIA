@@ -1,17 +1,23 @@
-research_task:
-  description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
-  expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+pesquisa_de_tema:
+  description: |
+    Com base no tema '{topic}', conduza uma pesquisa aprofundada para coletar um conjunto diversificado de repertórios socioculturais. Seu processo de pesquisa deve envolver múltiplas consultas, visando diferentes tipos de informação, como citações, dados, fatos históricos e referências culturais. Analise os resultados e selecione os mais fortes e pertinentes.
+  expected_output: |
+    Um relatório de pesquisa conciso em formato Markdown, contendo seções claras para: Citação de Autoridade, Dado Estatístico, Fato Histórico e Referência Cultural. Cada entrada deve conter o repertório, a fonte e uma breve explicação de sua aplicação ao tema.
 
-reporting_task:
-  description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
-  expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+escrita_da_redacao:
+  description: |
+    Utilizando o relatório de pesquisa fornecido no contexto, escreva uma redação dissertativo-argumentativa completa sobre o tema '{topic}'. Sua redação deve ter entre 25 e 30 linhas e seguir estritamente a estrutura canônica do ENEM:
+    1. Introdução com contextualização e tese clara.
+    2. Dois parágrafos de desenvolvimento, cada um com um argumento fundamentado por um repertório do contexto.
+    3. Conclusão com uma proposta de intervenção completa, contendo os 5 elementos obrigatórios (Ação, Agente, Meio/Modo, Efeito e Detalhamento).
+  expected_output: |
+    Um texto único em prosa, formatado como uma redação completa, com 4 ou 5 parágrafos, sem títulos ou marcações. A linguagem deve ser formal e o tom, persuasivo.
+
+avaliacao_da_redacao:
+  description: |
+    Você é um Avaliador Especialista do ENEM. Analise a redação fornecida e atribua uma nota de 0 a 200 para CADA UMA das 5 competências, justificando cada nota. Seja rigoroso e baseie sua análise SOMENTE nos critérios da Cartilha do Participante do INEP.
+    **PROCESSO DE AVALIAÇÃO (SIGA ESTRITAMENTE):**
+    Para cada competência (1 a 5), liste os pontos fortes e fracos, compare com a rubrica, atribua a nota e escreva a justificativa.
+    **FORMATO DE SAÍDA:** Sua resposta final deve ser um único bloco de código JSON, com chaves para cada competência contendo "nota" e "justificativa", e uma "nota_final".
+  expected_output: |
+    Um relatório de avaliação completo em formato de string JSON, válido e pronto para ser parseado.
