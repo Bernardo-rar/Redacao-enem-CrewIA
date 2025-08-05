@@ -20,7 +20,7 @@ class EnemAgents:
             backstory=dedent(config['backstory']),
             tools=[search_tool],
             verbose=config.get('verbose', True),
-            llm=ChatOpenAI() # Pode ser configurado para usar o modelo do.env
+            llm=ChatOpenAI() # Pode ser configurado para usar o modelo do.env,mudar para ia do groq
         )
 
     def redator_enem(self):
