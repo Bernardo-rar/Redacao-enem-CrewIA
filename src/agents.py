@@ -1,8 +1,11 @@
 from crewai import Agent
 from crewai_tools import SerperDevTool
 from textwrap import dedent
-from langchain_openai import ChatOpenAI
+# Remova a importação do ChatOpenAI e adicione a do ChatGroq
+# from langchain_openai import ChatOpenAI 
+from langchain_groq import ChatGroq 
 import yaml
+import os
 
 # Carregar configurações dos agentes do arquivo YAML
 with open('./config/agents.yaml', 'r') as file:
@@ -10,6 +13,13 @@ with open('./config/agents.yaml', 'r') as file:
 
 # Instanciar a ferramenta de pesquisa
 search_tool = SerperDevTool()
+
+# Instanciar o LLM da Groq que será usado por todos os agentes
+# Você pode escolher outros modelos, como 'mixtral-8x7b-32768'
+llm = ChatGroq(
+    api_key=os.environ.get("GROQ_API_KEY"),
+    model_name="compound-beta"
+)
 
 class EnemAgents:
     def pesquisador_sociocultural(self):
@@ -20,7 +30,7 @@ class EnemAgents:
             backstory=dedent(config['backstory']),
             tools=[search_tool],
             verbose=config.get('verbose', True),
-            llm=ChatOpenAI() # Pode ser configurado para usar o modelo do.env,mudar para ia do groq
+            llm=llm # Passa o modelo da Groq para o agente
         )
 
     def redator_enem(self):
@@ -30,7 +40,7 @@ class EnemAgents:
             goal=config['goal'],
             backstory=dedent(config['backstory']),
             verbose=config.get('verbose', True),
-            llm=ChatOpenAI()
+            llm=llm # Passa o modelo da Groq para o agente
         )
 
     def avaliador_especialista(self):
@@ -40,5 +50,5 @@ class EnemAgents:
             goal=config['goal'],
             backstory=dedent(config['backstory']),
             verbose=config.get('verbose', True),
-            llm=ChatOpenAI()
+            llm=llm # Passa o modelo da Groq para o agente
         )
