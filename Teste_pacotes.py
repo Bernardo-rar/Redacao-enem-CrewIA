@@ -1,6 +1,8 @@
 import os
 from crewai import Agent, Task, Crew, Process
 from langchain_groq import ChatGroq
+from dotenv import load_dotenv # <-- Adicione esta linha
+load_dotenv() # <-- E esta linha, para carregar o arquivo.env
 
 # --- PASSO 1: CONFIGURAR O MODELO DE LINGUAGEM (LLM) ---
 # Certifique-se de que a variável de ambiente GROQ_API_KEY está definida.
@@ -46,7 +48,7 @@ crew = Crew(
   agents=[knowledge_synthesizer],
   tasks=[task1],
   process=Process.sequential,
-  verbose=2
+  verbose=True
 )
 
 print("Iniciando a execução da equipe com Groq...")
