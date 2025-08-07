@@ -1,42 +1,55 @@
 import os
 from crewai import Agent, Task, Crew, Process
-from crewai_tools import SerperDevTool
+from langchain_groq import ChatGroq
 
-# Defina sua chave de API da Serper como uma variável de ambiente
-# os.environ = "SUA_CHAVE_AQUI"
+# --- PASSO 1: CONFIGURAR O MODELO DE LINGUAGEM (LLM) ---
+# Certifique-se de que a variável de ambiente GROQ_API_KEY está definida.
+# Você pode obter uma chave gratuita em: https://console.groq.com/keys
+try:
+    llm = ChatGroq(
+        model_name="compound-beta", # Ou outro modelo como "mixtral-8x7b-32768"
+        groq_api_key=os.environ.get("GROQ_API_KEY")
+    )
+except Exception as e:
+    print("Erro ao inicializar o LLM da Groq. Verifique se a variável de ambiente GROQ_API_KEY está definida corretamente.")
+    print(e)
+    exit()
 
-# Crie uma ferramenta de busca
-search_tool = SerperDevTool()
-
-# Crie um agente de pesquisa
-researcher = Agent(
-  role='Pesquisador Sênior',
-  goal='Descobrir tecnologias de ponta em IA e ciência de dados',
-  backstory="""Você é um pesquisador sênior em uma renomada instituição de tecnologia.
-  Sua especialidade é identificar tendências emergentes e explicar seu impacto.""",
+# --- PASSO 2: DEFINIR O AGENTE ---
+# Este agente não usa ferramentas externas; ele usa o conhecimento do LLM da Groq.
+knowledge_synthesizer = Agent(
+  role='Especialista em IA',
+  goal='Explicar conceitos complexos de IA de forma clara e concisa',
+  backstory="""Você é um especialista em Inteligência Artificial com um talento especial
+  para destilar tópicos difíceis em explicações compreensíveis. Você se baseia
+  em seu vasto conhecimento treinado para gerar respostas.""",
   verbose=True,
   allow_delegation=False,
-  tools=[search_tool]
+  llm=llm  # Atribui o LLM da Groq diretamente ao agente
+  # Note que o parâmetro 'tools' foi removido
 )
 
-# Crie uma tarefa para o agente
+# --- PASSO 3: DEFINIR A TAREFA ---
+# A tarefa foi ajustada para não depender de pesquisa em tempo real.
 task1 = Task(
-  description="""Investigue as últimas tendências em Modelos de Linguagem de Grande Escala (LLMs) em 2024.
-  Identifique três tendências principais e resuma-as.""",
-  expected_output="Um relatório completo de uma página com as três principais tendências de LLMs.",
-  agent=researcher
+  description="""Explique o conceito de "Mixture of Experts" (MoE) no contexto de
+  Modelos de Linguagem de Grande Escala (LLMs). Como essa arquitetura funciona
+  e quais são suas principais vantagens?""",
+  expected_output="""Um relatório de 3 parágrafos explicando o que é MoE,
+  seu funcionamento com roteamento de tokens e suas vantagens, como
+  eficiência computacional.""",
+  agent=knowledge_synthesizer
 )
 
-# Crie a equipe (crew) com o agente e a tarefa
+# --- PASSO 4: CRIAR E EXECUTAR A EQUIPE (CREW) ---
 crew = Crew(
-  agents=[researcher],
+  agents=[knowledge_synthesizer],
   tasks=[task1],
   process=Process.sequential,
   verbose=2
 )
 
-# Inicie a execução da equipe
-print("Iniciando a execução da equipe...")
+print("Iniciando a execução da equipe com Groq...")
 result = crew.kickoff()
 
 print("\n\n########################")
