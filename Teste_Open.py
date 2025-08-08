@@ -12,7 +12,7 @@ try:
     # MUDANÇA: Substituímos ChatGroq por ChatOpenAI e ajustamos o modelo
     llm = ChatOpenAI(
         model_name="gpt-3.5-turbo", # Modelo mais custo-efetivo da OpenAI
-        temperature=0.7 # Opcional: ajusta a criatividade da resposta
+        temperature=0.1 # Opcional: ajusta a criatividade da resposta
     )
 except Exception as e:
     print("Erro ao inicializar o LLM da OpenAI. Verifique se a variável de ambiente OPENAI_API_KEY está definida corretamente.")
